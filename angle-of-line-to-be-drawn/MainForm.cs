@@ -1,3 +1,5 @@
+using System.Drawing.Drawing2D;
+
 namespace angle_of_line_to_be_drawn
 {
     public partial class MainForm : Form
@@ -7,18 +9,17 @@ namespace angle_of_line_to_be_drawn
             InitializeComponent();
             pictureBox.Paint += (sender, e) =>
             {
-                e.Graphics.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
-                e.Graphics.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBicubic;
-                e.Graphics.PixelOffsetMode = System.Drawing.Drawing2D.PixelOffsetMode.HighQuality;
+                e.Graphics.SmoothingMode = SmoothingMode.AntiAlias;
+                e.Graphics.InterpolationMode = InterpolationMode.HighQualityBicubic;
+                e.Graphics.PixelOffsetMode = PixelOffsetMode.HighQuality;
 
                 foreach (var shape in Document)
                 {
                     if(shape is Line line)
                     {
-                        Point endPoint = line.EndPoint;
                         using (var pen = new Pen(line.Color, line.Width))
                         {
-                            e.Graphics.DrawLine(pen, line.Origin, endPoint);
+                            e.Graphics.DrawLine(pen, line.Origin, line.EndPoint);
                         }
                     }
                 }
