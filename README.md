@@ -1,10 +1,9 @@
 # Angle Of Line to be Drawn
 
 
+This strikes me as a bit of an [X-Y Problem](https://meta.stackexchange.com/a/66378) because even if you were to succeed in injecting an angle into a custom `PaintEventArgs` class a line and draw it, it's likely to be erased on the next refresh unless you're persisting it in a document of some kind. Same goes for a `Tag`. To draw on any control, call its `Refresh()` method and it will respond by firing the `Paint` message and providing a `Graphics` _blank_ canvas to draw on. Given that the effect of having an `angle` property in the _event_ argument or a tag would be so ephemeral, it's not a good fit there. 
 
-This strikes me as a bit of an [X-Y Problem](https://meta.stackexchange.com/a/66378) because even if you were to succeed in injecting an angle into a custom `PaintEventArgs` class a line and draw it, it's likely to be erased on the next refresh unless you're persisting it in a document of some kind. To draw on any control, call its `Refresh()` method and it will respond by firing the `Paint` message and providing a Graphics _blank_ canvas to draw on.
-
-Consider making a `Line` class with the `Angle` property that goes in a `List<object>` that can hold the various shapes you want to draw. You can continue to add more lines to the document, then call `Refresh` whenever there is a new shape to draw.
+Consider making a `Line` class with the `Angle` property that goes in a `List<object>` that can hold the various shapes you want to draw. You can continue to add more lines to the document, then call `pictureBox.Refresh` whenever there is a new shape to draw.
 
 [![lines with angles][1]][1]
 ```
@@ -15,18 +14,17 @@ public partial class MainForm : Form
         InitializeComponent();
         pictureBox.Paint += (sender, e) =>
         {
-            e.Graphics.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
-            e.Graphics.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBicubic;
-            e.Graphics.PixelOffsetMode = System.Drawing.Drawing2D.PixelOffsetMode.HighQuality;
+            e.Graphics.SmoothingMode = SmoothingMode.AntiAlias;
+            e.Graphics.InterpolationMode = InterpolationMode.HighQualityBicubic;
+            e.Graphics.PixelOffsetMode = PixelOffsetMode.HighQuality;
 
             foreach (var shape in Document)
             {
                 if(shape is Line line)
                 {
-                    Point endPoint = line.EndPoint;
                     using (var pen = new Pen(line.Color, line.Width))
                     {
-                        e.Graphics.DrawLine(pen, line.Origin, endPoint);
+                        e.Graphics.DrawLine(pen, line.Origin, line.EndPoint);
                     }
                 }
             }
@@ -38,8 +36,8 @@ public partial class MainForm : Form
                 Origin = pictureBox.GetCenterPoint(),
                 Angle = angle,
                 Length = 150,
-                Color = angle.ColorFromHSV()
-            }); ;
+                Color = angle.ConvertHueToRGB(),
+            });
         }
     }
     List<object> Document { get; } = new List<object>();
@@ -79,11 +77,7 @@ static partial class Extensions
         new Point(
             control.ClientRectangle.Left + control.ClientRectangle.Width / 2,
             control.ClientRectangle.Top + control.ClientRectangle.Height / 2);
-    public static Color ColorFromHSV(this double hue)
-    {
-        return Color.FromArgb(255, ConvertHueToRGB(hue, 1.0, 1.0));
-    }
-    private static Color ConvertHueToRGB(double hue, double saturation, double value)
+    public static Color ConvertHueToRGB(this double hue, double saturation = 1.0, double value = 1.0)
     {
         int hi = Convert.ToInt32(Math.Floor(hue / 60)) % 6;
         double f = hue / 60 - Math.Floor(hue / 60);
