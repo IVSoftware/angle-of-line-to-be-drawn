@@ -29,12 +29,12 @@
         private void InitializeComponent()
         {
             pictureBox = new PictureBox();
-            buttonAddLine = new Button();
             ((System.ComponentModel.ISupportInitialize)pictureBox).BeginInit();
             SuspendLayout();
             // 
             // pictureBox
             // 
+            pictureBox.BackColor = Color.FromArgb(22, 22, 22);
             pictureBox.BorderStyle = BorderStyle.FixedSingle;
             pictureBox.Dock = DockStyle.Fill;
             pictureBox.Location = new Point(10, 10);
@@ -43,24 +43,14 @@
             pictureBox.TabIndex = 0;
             pictureBox.TabStop = false;
             // 
-            // buttonAddLine
-            // 
-            buttonAddLine.Location = new Point(147, 475);
-            buttonAddLine.Name = "buttonAddLine";
-            buttonAddLine.Size = new Size(170, 34);
-            buttonAddLine.TabIndex = 1;
-            buttonAddLine.Text = "Add Line";
-            buttonAddLine.UseVisualStyleBackColor = true;
-            // 
             // MainForm
             // 
             AutoScaleDimensions = new SizeF(10F, 25F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(478, 544);
-            Controls.Add(buttonAddLine);
+            ClientSize = new Size(478, 444);
             Controls.Add(pictureBox);
             Name = "MainForm";
-            Padding = new Padding(10, 10, 10, 110);
+            Padding = new Padding(10);
             StartPosition = FormStartPosition.CenterScreen;
             Text = "MainForm";
             ((System.ComponentModel.ISupportInitialize)pictureBox).EndInit();
@@ -70,6 +60,5 @@
         #endregion
 
         private PictureBox pictureBox;
-        private Button buttonAddLine;
     }
 }
