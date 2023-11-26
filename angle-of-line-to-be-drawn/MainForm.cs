@@ -24,6 +24,25 @@ namespace angle_of_line_to_be_drawn
                     }
                 }
             };
+            // Do it again, with delay.
+            pictureBox.Click += async (sender, e) =>
+            {
+                Document.Clear();
+                pictureBox.Invalidate();
+                await Task.Delay(TimeSpan.FromMilliseconds(500));
+                for (double angle = 0; angle < 360; angle += 15)
+                {
+                    Document.Add(new Line
+                    {
+                        Origin = pictureBox.GetCenterPoint(),
+                        Angle = angle,
+                        Length = 150,
+                        Color = angle.ConvertHueToRGB(),
+                    });
+                    pictureBox.Invalidate();
+                    await Task.Delay(TimeSpan.FromMilliseconds(100));
+                }
+            };
             for (double angle = 0; angle<360; angle += 15)
             {
                 Document.Add(new Line
